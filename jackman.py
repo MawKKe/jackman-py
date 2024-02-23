@@ -97,7 +97,6 @@ def hijack(args: t.List[str], config: Config) -> t.List[str]:
                 break
         elif curr_arg.startswith(rpath):
             reldir = Path(curr_arg[len(rpath):])
-            print('RELDIR:', reldir, file=sys.stderr)
             yield rpath + str(config.cwd / simple_hash_dir(reldir))
             i += 1
             continue
