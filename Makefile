@@ -14,4 +14,4 @@ configure-nowrap:
 	cmake -B out-nowrap -S dummy_cmake_proj -G Ninja
 
 build:
-	cmake --build out --verbose --parallel 1
+	env JACKMAN_VERBOSE=1 JACKMAN_DEBUG_PERF=1 cmake --build out --verbose --parallel 1

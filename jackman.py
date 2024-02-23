@@ -206,12 +206,10 @@ def main(argv):
     b = time.perf_counter()
 
     if os.getenv('JACKMAN_VERBOSE', False):
-        print('-'*30, file=sys.stderr)
         print('>>> [jackman] REWRITE:', shlex.join(new_argv), file=sys.stderr)
-        print('-'*30, file=sys.stderr)
 
     if os.getenv('JACKMAN_DEBUG_PERF', False):
-        print(f'[jackman] PERF: {(b-a)*1000:.2f} ms', file=sys.stderr)
+        print(f'>>> [jackman] PERF: {(b-a)*1000:.2f} ms', file=sys.stderr)
 
     p = subprocess.run(new_argv)
 
