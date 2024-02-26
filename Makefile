@@ -1,6 +1,9 @@
 JACKMAN := $(abspath jackman.py)
 
 test:
+	pytest test_jackman.py -v
+
+test-with-cmake:
 	rm -rf out
 	${MAKE} configure
 	${MAKE} build

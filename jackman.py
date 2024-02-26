@@ -24,7 +24,7 @@ def hash_dir(path: Path) -> Path:
 
 
 def hijack(args: t.List[str], config: Config) -> t.List[str]:
-    config.prefix.mkdir(parents=True, exist_ok=True)
+    (config.cwd / config.prefix).mkdir(parents=True, exist_ok=True)
 
     def simple_hash_file(file_path: Path) -> Path:
         file_path = Path(file_path)
@@ -150,16 +150,16 @@ def hijack(args: t.List[str], config: Config) -> t.List[str]:
             rewritten = str(alias_dir)
 
         if original_dir.is_absolute():
-            tgt = original_dir
+            target = original_dir
         else:
-            tgt = config.cwd / original_dir
+            target = config.cwd / original_dir
 
         # It is possible that multiple processes want attempt to create this same alias
         # symlink concurrently; use atomicity of rename to prevent race conditions
         # from ruining our day
-        tmpLink = alias_dir.with_name(str(hash(curr_arg)))
-        os.symlink(tgt, tmpLink)
-        os.rename(tmpLink, alias_dir)
+        tmp_link = alias_dir.with_name(str(hash(alias_dir)) + str(hash(curr_arg)))
+        os.symlink(target, config.cwd / tmp_link)
+        os.rename(config.cwd / tmp_link, config.cwd / alias_dir)
 
         yield rewritten
 
