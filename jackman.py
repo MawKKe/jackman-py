@@ -107,6 +107,8 @@ def hijack(args: t.List[str], config: Config) -> t.List[str]:
                 i += 1
                 continue
 
+            is_rsp = True
+
             # NOTE: we must also hash the rsp file path, but _without_ the @ prefix char
             path = Path(curr_arg[1:])
 
@@ -123,7 +125,7 @@ def hijack(args: t.List[str], config: Config) -> t.List[str]:
             is_file = True
             i += 1
         elif 'CMakeFiles' in curr_arg:
-            if Path(curr_arg).suffix not in ['.d', '.o']:
+            if Path(curr_arg).suffix not in ['.d', '.o', '.dep']:
                 # There might be omissions, add known extensions to the above list if needed
                 raise RuntimeError(f'Uknown CMakeFiles file type: {curr_arg}?')
             i += 1
@@ -180,13 +182,15 @@ def main(argv):
 
     cmd, *args = argv[1:]
 
+    cmd_name = Path(cmd).name
+
     cmds_needing_rsp_rewrite = []  # FIXME
 
     # Force rewriting of response file contents. You might want to
     # enable/disable this depending on which tool is being wrapped.
     rewrite_force = os.getenv('JACKMAN_REWRITE_RSP', False)
 
-    config.rewrite_rsp = cmd in cmds_needing_rsp_rewrite or rewrite_force
+    config.rewrite_rsp = cmd_name in cmds_needing_rsp_rewrite or rewrite_force
 
     modified_args = list(hijack(args, config))
 
