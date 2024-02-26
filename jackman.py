@@ -7,16 +7,18 @@ import hashlib
 import subprocess
 import time
 import os
+from dataclasses import dataclass
 from pathlib import Path
 
 MAX_ARGUMENT_LENGTH: int = 240
 HEX_DIGEST_SIZE_BYTES: int = 8
 
+
+@dataclass
 class Config:
-    def __init__(self, cwd: Path, prefix: Path):
-        self.cwd = Path(cwd)
-        self.prefix = Path(prefix)
-        self.rewrite_rsp = False
+    cwd: Path
+    prefix: Path
+    rewrite_rsp: bool = False
 
 
 def hash_dir(path: Path) -> Path:
@@ -218,6 +220,7 @@ def main(argv):
     p = subprocess.run(new_argv)
 
     return p.returncode
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
